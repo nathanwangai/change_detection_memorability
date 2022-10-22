@@ -1,9 +1,7 @@
-import os
 import cv2
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from skimage import color
 from scipy import spatial
 from skimage.transform import resize
 
@@ -115,3 +113,6 @@ def plot_similarities(feature_layers, similarity_scores):
     plt.ylabel("Cosine Similarity x100", fontsize=14, fontweight="bold")
     
 # ----- end of helper functions -----
+
+if __name__ == "__main__":
+	pass
