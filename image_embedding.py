@@ -22,8 +22,8 @@ class Image:
     # formats image according to network specifications
     def load_img(self, img_path):
         img = cv2.imread(img_path)
-        img = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        img = resize(img, (self.input_dim, self.input_dim, 3), preserve_range=True) # preserve_range keeps floats in the original range, otherwise they are mapped to 0-1
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, (self.input_dim, self.input_dim, 3))
         return img
     
     # returns list of tuples for top 5 class predictions and the corresponding probability
