@@ -5,10 +5,8 @@ import matplotlib.pyplot as plt
 from scipy import spatial
 from skimage.transform import resize
 
-# ----- start of Image class -----
-
 """ 
-The Image class automatically computes and stores the top 5 predictions and selected layer embeddings for an input image.
+the Image class automatically computes and stores the top 5 predictions and selected layer embeddings for an input image.
 "model" is a tensorflow model that returns selected intermediate layer activations as the output.
 """
 class Image: 
@@ -22,8 +20,8 @@ class Image:
     # formats image according to network specifications
     def load_img(self, img_path):
         img = cv2.imread(img_path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = cv2.resize(img, (self.input_dim, self.input_dim, 3))
+        img = np.asarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        img = resize(img, (self.input_dim, self.input_dim, 3), preserve_range=True) # preserve_range keeps floats in the original range, otherwise they are mapped to 0-1
         return img
     
     # returns list of tuples for top 5 class predictions and the corresponding probability
@@ -64,10 +62,9 @@ class Image:
         plt.imshow(img2.img/255)
         plt.show()
 
-# ----- end of Image class -----
-
-# ----- start of helper functions -----
-
+"""
+functions for defining an embedding submodel
+"""
 # store all layer names of "model" to a list
 def get_all_layer_names(model):
     layer_names = []
@@ -90,9 +87,18 @@ def get_submodel(layers, model):
     submodel = tf.keras.models.Model(inputs=model.input, outputs=outputs)
     return submodel
 
+"""
+different distance metrics for comparing the semantic content of two images. 
+"""
 # compute the cosine similarity between two vectors
 def cosine_sim(vec1, vec2):
-    return (1 - spatial.distance.cosine(vec1, vec2))*100
+    return (1-spatial.distance.cosine(vec1, vec2)) * 100
+
+def cosine_dist(vec1, vec2):
+    return spatial.distance.cosine(vec1, vec2)
+
+def p_norm(vec1, vec2, p):
+    return np.sum(np.abs(vec1-vec2)**p) ** (1/p)
 
 # compute cosine similarity of corresponding layer activations between two images
 def similarity_vs_layer(img1, img2):
@@ -104,6 +110,9 @@ def similarity_vs_layer(img1, img2):
 
     return similarity_scores
 
+"""
+visualization functions
+"""
 # plot "similarity_scores" outputted from "similarity_vs_layer()"
 def plot_similarities(feature_layers, similarity_scores):
     plt.plot(feature_layers, similarity_scores)
@@ -111,8 +120,6 @@ def plot_similarities(feature_layers, similarity_scores):
     plt.xlabel("Layer ID", fontsize=14, fontweight="bold")
     plt.xticks(rotation = 45)
     plt.ylabel("Cosine Similarity x100", fontsize=14, fontweight="bold")
-    
-# ----- end of helper functions -----
 
 if __name__ == "__main__":
 	pass
