@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from scipy import spatial
-from skimage.transform import resize
+from skimage.transform import resize ##
 
 """ 
 the Image class automatically computes and stores the top 5 predictions and selected layer embeddings for an input image.

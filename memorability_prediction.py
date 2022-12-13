@@ -1,6 +1,7 @@
 """
 --- UNUSED CODE ---
 """
+import numpy as np
 
 # train an MLP on layer similarity scores and on concatenated semantic embeddings
 
